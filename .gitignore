@@ -31,3 +31,6 @@ hs_err_pid*
 
 # build dir
 /build
+/.settings
+.project
+.classpath

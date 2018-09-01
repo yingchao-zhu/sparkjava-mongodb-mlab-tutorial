@@ -1,10 +1,4 @@
----
-topic: "Databases: MongoDB"
-desc: "NoSQL database system"
-indent: true
----
-
-# Setting up MongoDB in Java
+# Setting up MongoDB w/ mLab in Java
 For an introduction to Databases, and their role in webapps, see the article:
 
 * [Webapps: Databases](/sparkjava-01/extra/databases)
@@ -76,7 +70,7 @@ HOST_=<your host name> // should be something with mlab in it...
 ```
 __!!! IMPORTANT !!!__
 
-Make sure that to add the following to your .gitignore! This way our secret credentials won't be pushed into our GitHub repos.
+Make sure to run the following to add ```.env``` to your .gitignore! This way our secret credentials won't be pushed into our GitHub repos.
 ```
 echo ".env" >> .gitignore
 ```
