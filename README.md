@@ -1,7 +1,7 @@
 # Setting up MongoDB w/ mLab in Java
 For an introduction to Databases, and their role in webapps, see the article:
 
-* [Webapps: Databases](/sparkjava-01/extra/databases)
+* [Webapps: Databases](/sparkjava-01/extra/databases.md)
 
 # MongoDB on mLab
 
