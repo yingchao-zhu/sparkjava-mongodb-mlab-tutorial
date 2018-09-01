@@ -42,6 +42,11 @@ In fact, the only free services on Heroku that do not require entering a credit 
 * The Heroku Connect add-on 
     (which is for integration with Salesforce.com, something not of particular interest to us in SPIS.)
 
+# Starting
+If you wish to follow this tutorial completely, you should . . .
+1. Fork [Professor Conrad's demo](https://github.com/ucsb-cs56-pconrad/sparkjava-01)
+2. Create a new Heroku project using ```heroku create <project-name>```
+3. Read all of the following steps throughly, so you don't leak credentials online
 
 # Installing MongoDB
 You need the MongoDB Library installed on your computer. Follow one of these depending on which operating system you have.
@@ -50,8 +55,47 @@ You need the MongoDB Library installed on your computer. Follow one of these dep
 - [macOS](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/)
 - [Windows](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/)
 
+# MLab Account
+- Create a free mLab account at [mLab.com](https://mlab.com)
+- Create a new deployment with any hosting service
+- Click on your new deployment
+- Go the users tab and make a new user
+- Take note of the user credentials your just made, your db name, and host
+
+
+```
+mongodb://<dbuser>:<dbpassword>@d<dbhost>/<dbname>
+```
+# Creating environment variables locally
+Since we're going to be logging into a remote database, we have to hide our login credentials from the outside world. To do this, we're going to make a ```.env``` file inside our project directory. It should have a structure similar to this.
+```
+USER_=<your user's username>
+PASS_=<your user's password>
+DB_NAME_=<your db name>
+HOST_=<your host name> // should be something with mlab in it...
+```
+__!!! IMPORTANT !!!__
+
+Make sure that to add the following to your .gitignore! This way our secret credentials won't be pushed into our GitHub repos.
+```
+echo ".env" >> .gitignore
+```
+
+# Creating config variables on heroku
+1. Go to your dashboard ```https://dashboard.heroku.com/apps/<project-name>/settings```
+2. Click on __Settings__
+3. Click __Reveal Config Vars__ inside the __Config Vars__ menu
+5. Input your key value pairs for your config variables in the same way as the environment variables
+```
+USER_        <username>
+.
+.
+.
+````
+This will allow our live webapp to access our database on mLab.
+
 # Additions to pom.xml
-If you're starting a new project, you must add the following lines to your pom.xml.
+If you forked the project, you must add the following lines to your pom.xml inside the ```<dependencies>``` tag.
 ```XML
 <!-- MongoDB NoSQL Database -->
  <dependencies>
@@ -65,40 +109,48 @@ If you're starting a new project, you must add the following lines to your pom.x
 </dependencies>
 ```
 
-# MLab Account
-- Create a free mLab account at [mLab.com](https://mlab.com)
-- Create a new deployment with any hosting service
-- Click on your new deployment
-- Go the users tab and make a new user
-- Take note of the user credentials your just made, your db name, and host
+# Java code
+If you take a look at ```Database.java``` you can see how we reference our MongoDB on mLab.
 
+```Java
+// Standard URI format: mongodb://[dbuser:dbpassword@]host:port/dbname
+       
+        String dbUser = System.getenv().get("USER_");
+        String dbPassword = System.getenv().get("PASS_");
+        String dbName  = System.getenv().get("DB_NAME_");
+        String hostName = System.getenv().get("HOST_");
+
+        // Good practice to always obscure sensitive login information
+
+        String request   = "mongodb://" + dbUser + ":" + dbPassword + "@" + hostName + "/" + dbName;
+
+        MongoClientURI uri  = new MongoClientURI(request); 
+        MongoClient client = new MongoClient(uri);
+        MongoDatabase db = client.getDatabase(uri.getDatabase());
 
 ```
-mongodb://<dbuser>:<dbpassword>@d<dbhost>/<dbname>
-```
-# Creating environment variables
-Since we're going to be logging into a remote database, we have to hide our login credentials from the outside world. To do this, we're going to make a ```.env``` file inside our project directory. It should have a structure similar to this.
-```
-USER_=<your user's username>
-PASS_=<your user's password>
-DB_NAME_=<your db name>
-HOST_=<your host name> // should be something with mlab in it...
-```
-__!!! IMPORTANT !!!__
 
-Make sure that to add the following to your .gitignore! This way our secret credentials won't be pushed into our GitHub repos.
+If you use the example database setup in ```Database.java```, you should be able to see real updates to your mLab account.
+
+To make changes to the website, have a look at the ```SparkDemo01.java``` code. There we just retreive the data from mLab and put it into some ```html``` tags.
+
+# Running
+In order for our database to hook up properly we have to run the following commands.
+
 ```
-.env
+mvn clean install
+heroku local        // in order to get our environment variables
 ```
 
-# 
+If you want to push to a live site you would have to add and commit your code then . . .
+```
+git push heroku
+```
 
-
-
+You'll know you're in the clear if your live site has the same data present in the database.
 # References
 
 * <https://ucsd-cse-spis-2016.github.io/webapps/databases_mongodb/>
 * <https://ucsd-cse-spis-2016.github.io/webapps/databases/>
 * <https://docs.mongodb.com/manual/installation/>
-* <https://mlab.com>
 * <https://blog.mlab.com/2011/11/ample-mongodb-examples/>
