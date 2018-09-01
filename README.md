@@ -1,4 +1,7 @@
 # Setting up MongoDB w/ mLab in Java
+
+Credit: The [original version of this tutorial](https://github.com/Figler/ucsb-cs56-mongodb-mlab-tut) is by [Chandler Forrest](https://github.com/figler), from Summer 2018).
+
 For an introduction to Databases, and their role in webapps, see the article:
 
 * [Webapps: Databases](/extra/databases.md)
@@ -7,9 +10,9 @@ For an introduction to Databases, and their role in webapps, see the article:
 
 MongoDB is a particular implementation of a NoSQL database.   There are multiple hosting providers that offer MongoDB implementations "in the cloud" as a service.
 
-The particular one we'll be using for SPIS 2016 is called mLab (<https://www.mlab.com>.  We are using mLab because:
+For CS56 coursework, we suggest using mLab: (<https://www.mlab.com>).  We are using mLab because:
 
-* there is free tier
+* there is a free tier
 * using the free tier does not require entering a credit card
 
 # Use mLab.com *directly*, not via the Heroku mLab add-on
@@ -37,12 +40,15 @@ In fact, the only free services on Heroku that do not require entering a credit 
     (which is for integration with Salesforce.com, something not of particular interest to us in SPIS.)
 
 # Starting
+
 If you wish to follow this tutorial completely, you should . . .
-1. Fork [Professor Conrad's demo](https://github.com/ucsb-cs56-pconrad/sparkjava-01)
+
+1. Fork [this demo repo](https://github.com/ucsb-cs56-pconrad/sparkjava-mongodb-mlab-tutorial)
 2. Create a new Heroku project using ```heroku create <project-name>```
 3. Read all of the following steps throughly, so you don't leak credentials online
 
 # Installing MongoDB
+
 You need the MongoDB Library installed on your computer. Follow one of these depending on which operating system you have.
 
 - [Linux](https://docs.mongodb.com/manual/administration/install-on-linux/)
@@ -50,6 +56,7 @@ You need the MongoDB Library installed on your computer. Follow one of these dep
 - [Windows](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/)
 
 # MLab Account
+
 - Create a free mLab account at [mLab.com](https://mlab.com)
 - Create a new deployment with any hosting service
 - Click on your new deployment
@@ -61,7 +68,9 @@ You need the MongoDB Library installed on your computer. Follow one of these dep
 mongodb://<dbuser>:<dbpassword>@d<dbhost>/<dbname>
 ```
 # Creating environment variables locally
+
 Since we're going to be logging into a remote database, we have to hide our login credentials from the outside world. To do this, we're going to make a ```.env``` file inside our project directory. It should have a structure similar to this.
+
 ```
 USER_=<your user's username>
 PASS_=<your user's password>
@@ -76,20 +85,25 @@ echo ".env" >> .gitignore
 ```
 
 # Creating config variables on heroku
+
 1. Go to your dashboard ```https://dashboard.heroku.com/apps/<project-name>/settings```
 2. Click on __Settings__
 3. Click __Reveal Config Vars__ inside the __Config Vars__ menu
 5. Input your key value pairs for your config variables in the same way as the environment variables
+
 ```
 USER_        <username>
 .
 .
 .
 ````
+
 This will allow our live webapp to access our database on mLab.
 
 # Additions to pom.xml
+
 If you forked the project, you must add the following lines to your pom.xml inside the ```<dependencies>``` tag.
+
 ```XML
 <!-- MongoDB NoSQL Database -->
  <dependencies>
@@ -104,6 +118,7 @@ If you forked the project, you must add the following lines to your pom.xml insi
 ```
 
 # Java code
+
 If you take a look at ```Database.java``` you can see how we reference our MongoDB on mLab.
 
 ```Java
@@ -129,6 +144,7 @@ If you use the example database setup in ```Database.java```, you should be able
 To make changes to the website, have a look at the ```SparkDemo01.java``` code. There we just retreive the data from mLab and put it into some ```html``` tags.
 
 # Running
+
 In order for our database to hook up properly we have to run the following commands.
 
 ```
@@ -137,14 +153,17 @@ heroku local        // in order to get our environment variables
 ```
 
 If you want to push to a live site you would have to add and commit your code then . . .
+
 ```
 git push heroku
 ```
 
 You'll know you're in the clear if your live site has the same data present in the database.
+
 # References
 
-* <https://ucsd-cse-spis-2016.github.io/webapps/databases_mongodb/>
-* <https://ucsd-cse-spis-2016.github.io/webapps/databases/>
-* <https://docs.mongodb.com/manual/installation/>
-* <https://blog.mlab.com/2011/11/ample-mongodb-examples/>
+* Some information about Databases MongoDB from a summer Program Prof. Conrad and Prof. Diba Miza helped design for UC San Diego:
+    * <https://ucsd-cse-spis-2016.github.io/webapps/databases_mongodb/>
+    * <https://ucsd-cse-spis-2016.github.io/webapps/databases/>
+* MongoDB Installation: <https://docs.mongodb.com/manual/installation/>
+* MongoDB Examples: <https://blog.mlab.com/2011/11/ample-mongodb-examples/>
