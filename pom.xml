@@ -23,6 +23,10 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
+
+    <userDefMain>edu.ucsb.cs56.pconrad.MongoDBDemo01</userDefMain>
+    <userDefHerokuApp>ucsb-cs56-pconrad-08-28-18</userDefHerokuApp>
+    
   </properties>
 
   <!-- what other software does our project depend on (third-party JARs, etc.) -->
@@ -100,7 +104,7 @@
             <configuration>
               <archive>
                 <manifest>
-		    <mainClass>edu.ucsb.cs56.pconrad.SparkDemo01</mainClass>
+		    <mainClass>${userDefMain}</mainClass>
                 </manifest>
               </archive>
               <descriptorRefs>
@@ -124,7 +128,7 @@
 	  </execution>
 	</executions>
 	<configuration>
-	  <mainClass>edu.ucsb.cs56.pconrad.SparkDemo01</mainClass> 
+	  <mainClass>${userDefMain}</mainClass>
 	</configuration>
       </plugin>
 
@@ -136,7 +140,7 @@
           <jdkVersion>1.8</jdkVersion>
           <!-- Use your own application name -->
 	  <!-- at Heroku CLI, use heroku apps to list, or use Heroku Dashboard -->
-          <appName>ucsb-cs56-pconrad-08-28-18</appName> 
+          <appName>${userDefHerokuApp}</appName> 
           <processTypes>
             <!-- Tell Heroku how to launch your application -->
             <!-- You might have to remove the ./ in front   -->
