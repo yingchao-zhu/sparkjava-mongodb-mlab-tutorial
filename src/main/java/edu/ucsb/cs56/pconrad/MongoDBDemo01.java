@@ -52,34 +52,39 @@ public class MongoDBDemo01 {
     */
     
     public static HashMap<String,String> getNeededEnvVars(String [] neededEnvVars) {
+
+        ProcessBuilder processBuilder = new ProcessBuilder();
+    		
 		HashMap<String,String> envVars = new HashMap<String,String>();
 		
-		
+		boolean error=false;		
 		for (String k:neededEnvVars) {
-			String v = System.getenv(k);
-			envVars.put(k,v);
-		}
-		
-		boolean error=false;
-		for (String k:neededEnvVars) {
-			if (envVars.get(k)==null) {
+			String v = processBuilder.environment().get(k);
+			if ( v!= null) {
+				envVars.put(k,v);
+			} else {
 				error = true;
 				System.err.println("Error: Must define env variable " + k);
 			}
-		}
-		if (error) { System.exit(1); }
+        }
 		
-		return envVars;
+		if (error) { System.exit(1); }
+
+		System.out.println("envVars=" + envVars);
+		return envVars;	 
     }
 	
 	public static String mongoDBUri(HashMap<String,String> envVars) {
+
+		System.out.println("envVars=" + envVars);
+		
 		// mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]
 		String uriString = "mongodb://" +
-			System.getenv("DB_USER") + ":" +
-			System.getenv("DB_PASS") + "@" +
-			System.getenv("DB_HOST") + ":" +
-			System.getenv("DB_PORT") + "/" +
-			System.getenv("DB_NAME");
+			envVars.get("MONGODB_USER") + ":" +
+			envVars.get("MONGODB_PASS") + "@" +
+			envVars.get("MONGODB_HOST") + ":" +
+			envVars.get("MONGODB_PORT") + "/" +
+			envVars.get("MONGODB_NAME");
 		System.out.println("uriString=" + uriString);
 		return uriString;
 	}
@@ -94,7 +99,7 @@ public class MongoDBDemo01 {
 					"MONGODB_HOST",
 					"MONGODB_PORT"				
 				});
-
+		
 		String uriString = mongoDBUri(envVars);
 			
         ArrayList<String> dbText = initDatabase(uriString);
